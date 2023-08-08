@@ -14,7 +14,6 @@ import {
 } from "./index";
 import {ContentPage, Editable} from "b2b-types";
 import {emptyPage} from "./api";
-import {selectCurrentKeyword} from "../keywords";
 import {Alert, FormCheck, FormColumn, LoadingProgressBar} from "chums-components";
 
 type ModalEditorField = keyof Pick<ContentPage, 'content' | 'metaDescription'>
@@ -124,7 +123,8 @@ const EditPage = () => {
                     <div className="input-group input-group-sm">
                         <textarea value={content.content ?? ''} onChange={textareaChangeHandler('content')}
                                   className="form-control form-control-sm" rows={5}/>
-                        <button type="button" className="btn btn-outline-secondary" onClick={() => onShowEditor('content')}>
+                        <button type="button" className="btn btn-outline-secondary"
+                                onClick={() => onShowEditor('content')}>
                             <span className="bi-pencil-square"/>
                         </button>
                     </div>
@@ -146,7 +146,8 @@ const EditPage = () => {
                         <textarea value={content.metaDescription ?? ''}
                                   onChange={textareaChangeHandler('metaDescription')}
                                   className="form-control form-control-sm" rows={5}/>
-                        <button type="button" className="btn btn-outline-secondary" onClick={() => onShowEditor('metaDescription')}>
+                        <button type="button" className="btn btn-outline-secondary"
+                                onClick={() => onShowEditor('metaDescription')}>
                             <span className="bi-pencil-square"/>
                         </button>
                     </div>

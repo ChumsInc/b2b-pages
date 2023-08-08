@@ -1,7 +1,7 @@
 import {ContentPage, Keyword} from "b2b-types";
 import {createAsyncThunk, createReducer, createSelector} from "@reduxjs/toolkit";
 import {fetchKeywords} from "./api";
-import {loadPage, loadPages, savePage, selectCurrentPage} from "../pages";
+import {loadPage, loadPages, removePage, savePage, selectCurrentPage} from "../pages";
 import {RootState} from "../../app/configureStore";
 
 export interface KeywordsState {
@@ -80,7 +80,6 @@ const keywordsReducer = createReducer(initialState, builder => {
         .addCase(loadPage.fulfilled, (state, action) => {
             if (action.payload && action.payload.keyword) {
                 const list = state.list.filter(kw => kw.keyword !== action.payload?.keyword);
-                const [existing] = state.list.filter(kw => kw.keyword === action.payload?.keyword);
                 state.list = [
                     ...list,
                     pageToKeyword(action.payload)
@@ -88,6 +87,13 @@ const keywordsReducer = createReducer(initialState, builder => {
             }
         })
         .addCase(loadPages.fulfilled, (state, action) => {
+            const list = state.list.filter(kw => kw.pagetype !== 'page');
+            state.list = [
+                ...list,
+                ...action.payload.map(page => pageToKeyword(page)),
+            ].sort(keywordsListSorter);
+        })
+        .addCase(removePage.fulfilled, (state, action) => {
             const list = state.list.filter(kw => kw.pagetype !== 'page');
             state.list = [
                 ...list,
