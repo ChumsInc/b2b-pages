@@ -15,6 +15,7 @@ import {
 import {ContentPage, Editable} from "b2b-types";
 import {emptyPage} from "./api";
 import {Alert, FormCheck, FormColumn, LoadingProgressBar} from "chums-components";
+import {TextareaAutosize} from '@mui/base/TextareaAutosize'
 
 type ModalEditorField = keyof Pick<ContentPage, 'content' | 'metaDescription'>
 
@@ -121,8 +122,8 @@ const EditPage = () => {
                 </FormColumn>
                 <FormColumn width={8} label="Page Content" className="mb-1">
                     <div className="input-group input-group-sm">
-                        <textarea value={content.content ?? ''} onChange={textareaChangeHandler('content')}
-                                  className="form-control form-control-sm" rows={5}/>
+                        <TextareaAutosize value={content.content ?? ''} onChange={textareaChangeHandler('content')}
+                                  className="form-control form-control-sm" minRows={2} maxRows={5}/>
                         <button type="button" className="btn btn-outline-secondary"
                                 onClick={() => onShowEditor('content')}>
                             <span className="bi-pencil-square"/>
@@ -143,9 +144,9 @@ const EditPage = () => {
                 </FormColumn>
                 <FormColumn width={8} label="SEO Description" className="mb-1">
                     <div className="input-group input-group-sm">
-                        <textarea value={content.metaDescription ?? ''}
+                        <TextareaAutosize value={content.metaDescription ?? ''}
                                   onChange={textareaChangeHandler('metaDescription')}
-                                  className="form-control form-control-sm" rows={5}/>
+                                  className="form-control form-control-sm" minRows={2} maxRows={5}/>
                         <button type="button" className="btn btn-outline-secondary"
                                 onClick={() => onShowEditor('metaDescription')}>
                             <span className="bi-pencil-square"/>

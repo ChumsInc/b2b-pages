@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Modal from "chums-components/dist/Modal";
-import ReactAce from "react-ace";
-import "ace-builds/src-noconflict/mode-html";
-import "ace-builds/src-noconflict/theme-github";
+import Editor, {DiffEditor, useMonaco} from "@monaco-editor/react";
 
 interface ModalEditorProps {
     title: string,
@@ -20,10 +18,10 @@ const ModalEditor: React.FC<ModalEditorProps> = ({title, content, onClose, onCan
 
     return (
         <Modal onClose={onCancel} size="lg" title={title}>
-            <ReactAce mode="html" value={html} tabSize={4} wrapEnabled width="100%" focus={true}
-                      name="modal-editor-ace" theme="github"
-                      setOptions={{useWorker: false}}
-                      onChange={(value => setHTML(value))}/>
+            <Editor language="html" value={html} options={{tabSize: 4}}
+                      theme="github"
+                    height="75vh"
+                      onChange={(value => setHTML(value ?? ''))}/>
             <div>
                 <button onClick={() => onClose(html)} className="btn btn-sm btn-primary me-1">Close / Apply Changes
                 </button>
