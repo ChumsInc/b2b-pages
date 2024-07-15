@@ -46,6 +46,7 @@ const EditPage = () => {
                 setContent({...content, [field]: ev.target.valueAsNumber, changed: true});
                 return;
             case 'status':
+            case 'requiresLogin':
                 setContent({...content, [field]: ev.target.checked, changed: true});
                 return;
             default:
@@ -95,18 +96,23 @@ const EditPage = () => {
                 )}
             </h4>
             <form onSubmit={submitHandler} className="my-3">
-                <FormColumn label="Keyword / Status" width={8}>
-                    <div className="row g-3">
-                        <div className="col-6">
-                            <input type="text" value={content.keyword ?? ''} onChange={inputChangeHandler('keyword')}
-                                   required className="form-control form-control-sm"/>
-                        </div>
-                        <div className="col-6">
-                            <FormCheck type="checkbox" checked={!!content.status}
-                                       onChange={inputChangeHandler('status')} label="Enabled"/>
-                        </div>
+                <FormColumn label="Keyword" width={8}>
+                    <div className="input-group input-group-sm">
+                        <div className="input-group-text">ID: {content.id}</div>
+                        <input type="text" value={content.keyword ?? ''} onChange={inputChangeHandler('keyword')}
+                               required className="form-control form-control-sm"/>
                     </div>
                     <KeywordExistsAlert keyword={content.keyword ?? ''} id={content.id}/>
+                </FormColumn>
+                <FormColumn label="Status">
+                    <div className="row g-3">
+                        <div className="col-6">
+                            <FormCheck type="checkbox" checked={content.status} onChange={inputChangeHandler('status')} label="Enabled" />
+                        </div>
+                        <div className="col-6">
+                            <FormCheck type="checkbox" checked={content.requiresLogin ?? false} onChange={inputChangeHandler('requiresLogin')} label="Requires Login" />
+                        </div>
+                    </div>
                 </FormColumn>
                 <FormColumn label="Title *" width={8}>
                     <input type="text" value={content.title ?? ''} onChange={inputChangeHandler('title')}

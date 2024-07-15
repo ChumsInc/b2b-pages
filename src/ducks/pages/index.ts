@@ -1,12 +1,16 @@
 import {ContentPage} from "b2b-types";
-import {createAction, createAsyncThunk, createReducer} from "@reduxjs/toolkit";
+import {createAction, createAsyncThunk, createReducer, createSelector} from "@reduxjs/toolkit";
 import {deletePage, fetchPage, fetchPages, postPage} from "./api";
 import {RootState} from "../../app/configureStore";
 import {SortProps} from "chums-components";
+import {Root} from "react-dom/client";
 
 export interface PagesState {
     list: ContentPage[];
     loading: boolean;
+    search: string;
+    showInactive: boolean;
+    sort: SortProps<ContentPage>,
     current: {
         page: ContentPage | null;
         loading: boolean;
@@ -17,6 +21,9 @@ export interface PagesState {
 export const initialState: PagesState = {
     list: [],
     loading: false,
+    search: '',
+    showInactive: false,
+    sort: {field:"keyword", ascending: true},
     current: {
         page: null,
         loading: false,
@@ -26,10 +33,24 @@ export const initialState: PagesState = {
 
 
 export const selectList = (state: RootState) => state.pages.list;
+export const selectSearch = (state:RootState) => state.pages.search;
+export const selectSort = (state:RootState) => state.pages.sort;
+export const selectShowInactive = (state:RootState) => state.pages.showInactive;
 export const selectListLoading = (state: RootState) => state.pages.loading;
 export const selectCurrentPage = (state: RootState) => state.pages.current.page;
 export const selectCurrentLoading = (state: RootState) => state.pages.current.loading;
 export const selectCurrentSaving = (state: RootState) => state.pages.current.saving;
+
+export const selectFilteredList = createSelector(
+    [selectList, selectSearch, selectShowInactive, selectSort],
+    (list, search, showInactive, sort) => {
+        const regex = new RegExp('\\b' + search, 'i');
+        return list
+            .filter(page => showInactive || page.status)
+            .filter(page => !search.trim() || (regex.test(page.title ?? '') || regex.test(String(page.id))))
+            .sort(pageListSorter(sort));
+    }
+)
 
 export const defaultPagesSort: SortProps<ContentPage> = {
     field: 'id',
@@ -72,6 +93,9 @@ export const loadPages = createAsyncThunk<ContentPage[]>(
     }
 )
 
+export const toggleShowInactive = createAction<boolean|undefined>('pages/filter/inactive');
+export const setSearch = createAction<string>('pages/filter/search');
+export const setSort = createAction<SortProps<ContentPage>>('pages/sort');
 export const clearCurrentPage = createAction('pages/current/clear');
 
 export const loadPage = createAsyncThunk<ContentPage | null, number>(
@@ -175,7 +199,16 @@ const pagesReducer = createReducer(initialState, builder => {
         })
         .addCase(removePage.rejected, (state) => {
             state.current.saving = false;
-        });
+        })
+        .addCase(setSearch, (state, action) => {
+            state.search = action.payload;
+        })
+        .addCase(setSort, (state, action) => {
+            state.sort = action.payload;
+        })
+        .addCase(toggleShowInactive, (state, action) => {
+            state.showInactive = action.payload ?? !state.showInactive;
+        })
 })
 
 export default pagesReducer;

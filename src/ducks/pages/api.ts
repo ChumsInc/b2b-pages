@@ -3,9 +3,9 @@ import {fetchJSON} from "chums-components";
 
 export async function fetchPages():Promise<ContentPage[]> {
     try {
-        const url = `/api/b2b/pages`;
+        const url = `/api/b2b/pages.json`;
         const res = await fetchJSON<{pages: ContentPage[]}>(url, {cache: 'no-cache'});
-        return res.pages ?? [];
+        return res?.pages ?? [];
     } catch(err:unknown) {
         if (err instanceof Error) {
             console.debug("fetchPages()", err.message);
@@ -19,8 +19,10 @@ export async function fetchPages():Promise<ContentPage[]> {
 export async function postPage(arg:ContentPage):Promise<ContentPage|null> {
     try {
         const body = JSON.stringify(arg);
-        const res = await fetchJSON<{ page?: ContentPage }>('/api/b2b/pages', {method: 'POST', body});
-        return res.page ?? null;
+        const url = !!arg.id ? `/api/b2b/pages/${encodeURIComponent(arg.id)}.json` : '/api/b2b/pages/page.json';
+        const method = !!arg.id ? 'PUT' : 'POST';
+        const res = await fetchJSON<{ page?: ContentPage }>(url, {method, body});
+        return res?.page ?? null;
     } catch(err:unknown) {
         if (err instanceof Error) {
             console.debug("postPage()", err.message);
@@ -33,9 +35,9 @@ export async function postPage(arg:ContentPage):Promise<ContentPage|null> {
 
 export async function fetchPage(arg:number):Promise<ContentPage|null> {
     try {
-        const url = `/api/b2b/pages/${encodeURIComponent(arg)}`;
-        const res = await fetchJSON<{pages: ContentPage[]}>(url, {cache: 'no-cache'});
-        return res?.pages?.[0] ?? null;
+        const url = `/api/b2b/pages/${encodeURIComponent(arg)}.json`;
+        const res = await fetchJSON<{page: ContentPage|null}>(url, {cache: 'no-cache'});
+        return res?.page ?? null;
     } catch(err:unknown) {
         if (err instanceof Error) {
             console.debug("()", err.message);
@@ -48,9 +50,9 @@ export async function fetchPage(arg:number):Promise<ContentPage|null> {
 
 export async function deletePage(arg:number):Promise<ContentPage[]> {
     try {
-        const url = `/api/b2b/pages/${encodeURIComponent(arg)}`;
+        const url = `/api/b2b/pages/${encodeURIComponent(arg)}.json`;
         const res = await fetchJSON<{pages: ContentPage[]}>(url, {method: 'DELETE', cache: 'no-cache'});
-        return res.pages ?? [];
+        return res?.pages ?? [];
     } catch(err:unknown) {
         if (err instanceof Error) {
             console.debug("deletePage()", err.message);
@@ -72,4 +74,5 @@ export const emptyPage:ContentPage = {
     priority: 0,
     metaDescription: null,
     searchWords: null,
+    requiresLogin: false,
 }

@@ -5,7 +5,7 @@ export async function fetchKeywords():Promise<Keyword[]> {
     try {
         const url = `/api/b2b/keywords`;
         const res = await fetchJSON<{result: Keyword[]}>(url, {cache: 'no-cache'});
-        return res.result ?? [];
+        return res?.result ?? [];
     } catch(err:unknown) {
         if (err instanceof Error) {
             console.debug("loadKeywords()", err.message);

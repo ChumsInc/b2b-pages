@@ -18,10 +18,10 @@ const App = () => {
         <div>
             <AlertList/>
             <div className="row g-3">
-                <div className="col-6 col-lg-8">
+                <div className="col-6">
                     <PageList/>
                 </div>
-                <div className="col-6 col-lg-4">
+                <div className="col-6">
                     <EditPage/>
                 </div>
             </div>
