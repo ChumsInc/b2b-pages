@@ -61,7 +61,7 @@ const PageList = () => {
     }
 
     const sortChangeHandler = (sort: SortProps) => {
-        setSort(sort);
+        dispatch(setSort(sort));
     }
 
     const pagedData = list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
