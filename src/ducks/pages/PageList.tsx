@@ -12,11 +12,14 @@ import {useAppDispatch, useAppSelector} from "../../app/configureStore";
 import {
     loadPage,
     loadPages,
-    pageListSorter,
     selectFilteredList,
-    selectList,
-    selectListLoading, selectSearch, selectShowInactive, selectSort,
-    setSearch, setSort, toggleShowInactive
+    selectListLoading,
+    selectSearch,
+    selectShowInactive,
+    selectSort,
+    setSearch,
+    setSort,
+    toggleShowInactive
 } from "./index";
 import {loadKeywords} from "../keywords";
 import classNames from "classnames";
@@ -45,7 +48,7 @@ const PageList = () => {
         dispatch(loadKeywords());
     }
 
-    const selectRowHandler = (row:ContentPage) => {
+    const selectRowHandler = (row: ContentPage) => {
         dispatch(loadPage(row.id));
     }
 
@@ -53,11 +56,11 @@ const PageList = () => {
         setPage(0)
     }, [list, rowsPerPage]);
 
-    const searchChangeHandler = (ev:ChangeEvent<HTMLInputElement>) => {
+    const searchChangeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
         dispatch(setSearch(ev.target.value));
     }
 
-    const sortChangeHandler = (sort:SortProps) => {
+    const sortChangeHandler = (sort: SortProps) => {
         setSort(sort);
     }
 
@@ -81,7 +84,8 @@ const PageList = () => {
                 </div>
             </div>
             {loading && <LoadingProgressBar animated className="my-1"/>}
-            <SortableTable currentSort={sort} onChangeSort={sortChangeHandler} fields={fields} data={pagedData} keyField="id"
+            <SortableTable currentSort={sort} onChangeSort={sortChangeHandler} fields={fields} data={pagedData}
+                           keyField="id"
                            rowClassName={(row) => classNames({'table-warning': !row.status})}
                            onSelectRow={selectRowHandler}/>
             <TablePagination page={page} onChangePage={setPage} rowsPerPage={rowsPerPage}

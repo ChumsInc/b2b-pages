@@ -3,7 +3,6 @@ import {createAction, createAsyncThunk, createReducer, createSelector} from "@re
 import {deletePage, fetchPage, fetchPages, postPage} from "./api";
 import {RootState} from "../../app/configureStore";
 import {SortProps} from "chums-components";
-import {Root} from "react-dom/client";
 
 export interface PagesState {
     list: ContentPage[];
@@ -23,7 +22,7 @@ export const initialState: PagesState = {
     loading: false,
     search: '',
     showInactive: false,
-    sort: {field:"keyword", ascending: true},
+    sort: {field: "keyword", ascending: true},
     current: {
         page: null,
         loading: false,
@@ -33,9 +32,9 @@ export const initialState: PagesState = {
 
 
 export const selectList = (state: RootState) => state.pages.list;
-export const selectSearch = (state:RootState) => state.pages.search;
-export const selectSort = (state:RootState) => state.pages.sort;
-export const selectShowInactive = (state:RootState) => state.pages.showInactive;
+export const selectSearch = (state: RootState) => state.pages.search;
+export const selectSort = (state: RootState) => state.pages.sort;
+export const selectShowInactive = (state: RootState) => state.pages.showInactive;
 export const selectListLoading = (state: RootState) => state.pages.loading;
 export const selectCurrentPage = (state: RootState) => state.pages.current.page;
 export const selectCurrentLoading = (state: RootState) => state.pages.current.loading;
@@ -93,7 +92,7 @@ export const loadPages = createAsyncThunk<ContentPage[]>(
     }
 )
 
-export const toggleShowInactive = createAction<boolean|undefined>('pages/filter/inactive');
+export const toggleShowInactive = createAction<boolean | undefined>('pages/filter/inactive');
 export const setSearch = createAction<string>('pages/filter/search');
 export const setSort = createAction<SortProps<ContentPage>>('pages/sort');
 export const clearCurrentPage = createAction('pages/current/clear');
