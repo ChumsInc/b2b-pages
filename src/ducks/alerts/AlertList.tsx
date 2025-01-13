@@ -1,24 +1,24 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 import {dismissAlert, selectAlerts} from "./index";
-import {Alert} from "chums-components";
 import {useAppDispatch} from "../../app/configureStore";
+import ContextAlert from "./ContextAlert";
 
 const AlertList = () => {
     const dispatch = useAppDispatch();
     const alerts = useSelector(selectAlerts);
 
-    const dismissHandler = (key:string|number) => dispatch(dismissAlert(key));
+    const dismissHandler = (key: string | number) => dispatch(dismissAlert(key));
 
     return (
         <div>
             {Object.keys(alerts).map(key => (
-                <Alert key={key} color={alerts[key].color} onDismiss={() => dismissHandler(key)} count={alerts[key].count}>
-                    [<strong>{alerts[key].context}</strong>] {alerts[key].message}
+                <ContextAlert key={key} color={alerts[key].color} dismissible onClose={() => dismissHandler(key)}
+                              count={alerts[key].count}>
                     {!!alerts[key].error && (
                         <div style={{whiteSpace: 'pre-wrap'}}>{alerts[key].error?.stack}</div>
                     )}
-                </Alert>
+                </ContextAlert>
             ))}
         </div>
     )

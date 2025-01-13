@@ -1,52 +1,28 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import {
-    FormCheck,
-    LoadingProgressBar,
-    SortableTable,
-    SortableTableField,
-    SortProps,
-    TablePagination
-} from "chums-components";
+import React, {useEffect, useState} from 'react';
+import {SortableTable, SortableTableField, SortProps, TablePagination} from "chums-components";
 import {ContentPage} from "b2b-types";
 import {useAppDispatch, useAppSelector} from "../../app/configureStore";
-import {
-    loadPage,
-    loadPages,
-    selectFilteredList,
-    selectListLoading,
-    selectSearch,
-    selectShowInactive,
-    selectSort,
-    setSearch,
-    setSort,
-    toggleShowInactive
-} from "./index";
-import {loadKeywords} from "../keywords";
+import {loadPage, selectFilteredList, selectListLoading, selectSort, setSort} from "./index";
 import classNames from "classnames";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import PageFilters from "./components/PageFilters";
 
 const fields: SortableTableField<ContentPage>[] = [
-    {field: 'id', title: 'ID', sortable: true},
+    {field: 'id', title: 'ID', sortable: true, align: 'end' },
     {field: 'keyword', title: 'Keyword', sortable: true},
     {field: 'title', title: 'Name', sortable: true},
     {field: 'filename', title: 'Filename', sortable: true},
     {field: 'changefreq', title: 'SEO Change Freq.', sortable: true},
-    {field: 'priority', title: 'SEO Priority', sortable: true},
+    {field: 'priority', title: 'SEO Priority', sortable: true, align: 'end'},
 ];
 
 const PageList = () => {
     const dispatch = useAppDispatch();
     const list = useAppSelector(selectFilteredList);
     const loading = useAppSelector(selectListLoading);
-    const search = useAppSelector(selectSearch);
     const sort = useAppSelector(selectSort);
-    const showInactive = useAppSelector(selectShowInactive);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
-    const reloadHandler = () => {
-        dispatch(loadPages());
-        dispatch(loadKeywords());
-    }
 
     const selectRowHandler = (row: ContentPage) => {
         dispatch(loadPage(row.id));
@@ -56,11 +32,8 @@ const PageList = () => {
         setPage(0)
     }, [list, rowsPerPage]);
 
-    const searchChangeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
-        dispatch(setSearch(ev.target.value));
-    }
 
-    const sortChangeHandler = (sort: SortProps) => {
+    const sortChangeHandler = (sort: SortProps<ContentPage>) => {
         dispatch(setSort(sort));
     }
 
@@ -68,22 +41,8 @@ const PageList = () => {
 
     return (
         <div>
-            <div className="row g-3 align-items-baseline mb-3">
-                <div className="col-auto">Search</div>
-                <div className="col">
-                    <input type="search" className="form-control form-control-sm" value={search}
-                           onChange={searchChangeHandler}/>
-                </div>
-                <div className="col-auto">
-                    <FormCheck type="checkbox" label="Show Inactive"
-                               checked={showInactive}
-                               onChange={(ev) => dispatch(toggleShowInactive(ev.target.checked))}/>
-                </div>
-                <div className="col-auto">
-                    <button type="button" className="btn btn-sm btn-primary" onClick={reloadHandler}>Reload</button>
-                </div>
-            </div>
-            {loading && <LoadingProgressBar animated className="my-1"/>}
+            <PageFilters/>
+            {loading && <ProgressBar animated striped className="my-1" variant="primary" now={100}/>}
             <SortableTable currentSort={sort} onChangeSort={sortChangeHandler} fields={fields} data={pagedData}
                            keyField="id"
                            rowClassName={(row) => classNames({'table-warning': !row.status})}

@@ -1,8 +1,5 @@
 import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import ModalEditor from "../../components/ModalEditor";
-import SEOChangeSelect from "../../components/SEOChangeSelect";
-import SEOPrioritySelect from "../../components/SEOPrioritySelect";
-import KeywordExistsAlert from "../../components/AlertExistingKeyword";
 import {useAppDispatch, useAppSelector} from "../../app/configureStore";
 import {
     clearCurrentPage,
@@ -14,8 +11,17 @@ import {
 } from "./index";
 import {ContentPage, Editable} from "b2b-types";
 import {emptyPage} from "./api";
-import {Alert, FormCheck, FormColumn, LoadingProgressBar} from "chums-components";
-import {TextareaAutosize} from '@mui/base/TextareaAutosize'
+import Alert from 'react-bootstrap/Alert'
+import {ProgressBar} from "react-bootstrap";
+import KeywordInput from "./components/KeywordInput";
+import PageStatus from "./components/PageStatus";
+import PageFormControl from "./components/PageFormControl";
+import PageTextArea from "./components/PageTextArea";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import PageFormGroup from "./components/PageFormGroup";
+import PageSEOOptions from "./components/PageSEOOptions";
+import Button from "react-bootstrap/Button";
 
 type ModalEditorField = keyof Pick<ContentPage, 'content' | 'metaDescription'>
 
@@ -96,102 +102,60 @@ const EditPage = () => {
                 )}
             </h4>
             <form onSubmit={submitHandler} className="my-3">
-                <FormColumn label="Keyword" width={8}>
-                    <div className="input-group input-group-sm">
-                        <div className="input-group-text">ID: {content.id}</div>
-                        <input type="text" value={content.keyword ?? ''} onChange={inputChangeHandler('keyword')}
-                               required className="form-control form-control-sm"/>
-                    </div>
-                    <KeywordExistsAlert keyword={content.keyword ?? ''} id={content.id}/>
-                </FormColumn>
-                <FormColumn label="Status">
-                    <div className="row g-3">
-                        <div className="col-6">
-                            <FormCheck type="checkbox" checked={content.status} onChange={inputChangeHandler('status')} label="Enabled" />
-                        </div>
-                        <div className="col-6">
-                            <FormCheck type="checkbox" checked={content.requiresLogin ?? false} onChange={inputChangeHandler('requiresLogin')} label="Requires Login" />
-                        </div>
-                    </div>
-                </FormColumn>
-                <FormColumn label="Title *" width={8}>
-                    <input type="text" value={content.title ?? ''} onChange={inputChangeHandler('title')}
-                           required className="form-control form-control-sm"/>
-                </FormColumn>
-                <FormColumn label="Subtitle" width={8}>
-                    <input type="text" value={content.subtitle ?? ''} onChange={inputChangeHandler('subtitle')}
-                           className="form-control form-control-sm"/>
-                </FormColumn>
-                <FormColumn label="Filename" width={8}>
-                    <input type="text" value={content.filename ?? ''} onChange={inputChangeHandler('filename')}
-                           className="form-control form-control-sm"/>
-                </FormColumn>
-                <FormColumn width={8} label="Page Content" className="mb-1">
-                    <div className="input-group input-group-sm">
-                        <TextareaAutosize value={content.content ?? ''} onChange={textareaChangeHandler('content')}
-                                  className="form-control form-control-sm" minRows={2} maxRows={5}/>
-                        <button type="button" className="btn btn-outline-secondary"
-                                onClick={() => onShowEditor('content')}>
-                            <span className="bi-pencil-square"/>
-                        </button>
-                    </div>
-                </FormColumn>
-                <FormColumn label="Lifestyle Image" width={8}>
-                    <input type="text" value={content.lifestyle ?? ''} onChange={inputChangeHandler('lifestyle')}
-                           className="form-control form-control-sm"/>
-                </FormColumn>
-                <FormColumn label="Page CSS File" width={8}>
-                    <input type="text" value={content.css ?? ''} onChange={inputChangeHandler('css')}
-                           className="form-control form-control-sm"/>
-                </FormColumn>
-                <FormColumn label="Search Words" width={8}>
-                    <input type="text" value={content.searchWords ?? ''} onChange={inputChangeHandler('searchWords')}
-                           className="form-control form-control-sm"/>
-                </FormColumn>
-                <FormColumn width={8} label="SEO Description" className="mb-1">
-                    <div className="input-group input-group-sm">
-                        <TextareaAutosize value={content.metaDescription ?? ''}
-                                  onChange={textareaChangeHandler('metaDescription')}
-                                  className="form-control form-control-sm" minRows={2} maxRows={5}/>
-                        <button type="button" className="btn btn-outline-secondary"
-                                onClick={() => onShowEditor('metaDescription')}>
-                            <span className="bi-pencil-square"/>
-                        </button>
-                    </div>
-                </FormColumn>
-                <FormColumn width={8} label="SEO Changes / Priority">
-                    <div className="row g-3">
-                        <div className="col-6">
-                            <SEOChangeSelect value={content.changefreq} onChange={selectChangeHandler('changefreq')}/>
-                        </div>
-                        <div className="col-6">
-                            <SEOPrioritySelect value={content.priority} onChange={selectChangeHandler('priority')}/>
-                        </div>
-                    </div>
-                </FormColumn>
-                <FormColumn width={8} label={' '}>
-                    <div className="row g-3">
-                        <div className="col-auto">
-                            <button type="submit" className="btn btn-sm btn-primary mr-1">Save</button>
-                        </div>
-                        <div className="col-auto">
-                            <button type="button" className="btn btn-sm btn-outline-secondary mr-1"
-                                    onClick={onNewPage}>
-                                New Page
-                            </button>
-                        </div>
-                        <div className="col-auto">
-                            <button type="button" className="btn btn-sm btn-outline-danger mr-1"
-                                    disabled={!content.id || content.changed}
-                                    onClick={onDeletePage}>
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </FormColumn>
-                {content.changed && <Alert color="warning" message="Don't forget to save your changes"/>}
+                <KeywordInput pageId={content.id} value={content.keyword ?? ''}
+                              onChange={inputChangeHandler('keyword')}/>
+                <PageStatus slots={{
+                    status: {checked: content.status, onChange: (inputChangeHandler('status'))},
+                    requiresLogin: {
+                        checked: content.requiresLogin ?? false,
+                        onChange: (inputChangeHandler('requiresLogin'))
+                    },
+                }}/>
+                <PageFormControl label="Title" value={content.title ?? ''} onChange={inputChangeHandler('title')}
+                                 required/>
+                <PageFormControl label="Subtitle" value={content.subtitle ?? ''}
+                                 onChange={inputChangeHandler('subtitle')}/>
+                <PageFormControl label="Filename" value={content.filename ?? ''}
+                                 onChange={inputChangeHandler('filename')}/>
+                <PageTextArea label="Page Content" value={content.content ?? ''}
+                              onChange={inputChangeHandler('content')} canZoom onZoom={() => onShowEditor('content')}/>
+                <PageFormControl label="Lifestyle Image" value={content.lifestyle ?? ''}
+                                 onChange={inputChangeHandler('lifestyle')}/>
+                <PageFormControl label="Page CSS File" value={content.css ?? ''} onChange={inputChangeHandler('css')}/>
+                <PageFormControl label="Search Words" value={content.searchWords ?? ''}
+                                 onChange={inputChangeHandler('searchWords')}/>
+                <PageTextArea label="SEO Description"
+                              value={content.metaDescription ?? ''} onChange={inputChangeHandler('metaDescription')}
+                              canZoom onZoom={() => onShowEditor('metaDescription')}
+                />
+                <PageSEOOptions label="SEO Changes / Priority"
+                                slots={{
+                                    changes: {value: content.changefreq, onChange: selectChangeHandler('changefreq')},
+                                    priority: {value: content.priority, onChange: selectChangeHandler('priority')}
+                                }}
+                />
+                <hr/>
+                <PageFormGroup label={' '}>
+                    <Col>
+                        <Row gap={3}>
+                            <Col xs="auto">
+                                <Button type="submit" variant="primary" size="sm">Save</Button>
+                            </Col>
+                            <Col xs="auto">
+                                <Button type="button" variant="outline-secondary" size="sm" onClick={onNewPage}>New
+                                    Page</Button>
+                            </Col>
+                            <Col xs="auto">
+                                <Button type="submit" variant="outline-danger" size="sm"
+                                        disabled={!content.id || content.changed}
+                                        onClick={onDeletePage}>Delete</Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                </PageFormGroup>
+                {content.changed && <Alert variant="warning">Don't forget to save your changes"</Alert>}
             </form>
-            {loading && <LoadingProgressBar animated striped/>}
+            {loading && <ProgressBar animated striped/>}
             {showModalEditor &&
                 <ModalEditor title={`edit product.${modalEditorField}`}
                              content={String(content[modalEditorField]) ?? ''}

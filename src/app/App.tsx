@@ -5,6 +5,8 @@ import {loadKeywords} from "../ducks/keywords";
 import PageList from "../ducks/pages/PageList";
 import EditPage from "../ducks/pages/EditPage";
 import AlertList from "../ducks/alerts/AlertList";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const App = () => {
     const dispatch = useAppDispatch();
@@ -17,14 +19,14 @@ const App = () => {
     return (
         <div>
             <AlertList/>
-            <div className="row g-3">
-                <div className="col-6">
+            <Row className="row g-3">
+                <Col xs={12} md={6}>
                     <PageList/>
-                </div>
-                <div className="col-6">
+                </Col>
+                <Col xs={12} md={6}>
                     <EditPage/>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     )
 }

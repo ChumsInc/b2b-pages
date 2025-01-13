@@ -1,11 +1,9 @@
 import React, {ChangeEventHandler} from 'react';
+import {FormSelect, FormSelectProps} from "react-bootstrap";
 
-const SEOChangeSelect = ({value, onChange}: {
-    value: string | null | undefined;
-    onChange: ChangeEventHandler<HTMLSelectElement>;
-}) => {
+const SEOChangeSelect = ({value, onChange, ...rest}: FormSelectProps) => {
     return (
-        <select className="form-select form-select-sm" value={value || ''} onChange={onChange} required={true}>
+        <FormSelect size="sm" value={value || ''} onChange={onChange} required={true} {...rest}>
             <option>Select One</option>
             <option value="n/a">Not Published</option>
             <option value="always">always</option>
@@ -15,7 +13,7 @@ const SEOChangeSelect = ({value, onChange}: {
             <option value="monthly">monthly</option>
             <option value="yearly">yearly</option>
             <option value="never">never</option>
-        </select>
+        </FormSelect>
     )
 };
 

@@ -19,7 +19,7 @@ export async function fetchPages():Promise<ContentPage[]> {
 export async function postPage(arg:ContentPage):Promise<ContentPage|null> {
     try {
         const body = JSON.stringify(arg);
-        const url = !!arg.id ? `/api/b2b/pages/${encodeURIComponent(arg.id)}.json` : '/api/b2b/pages/page.json';
+        const url = !!arg.id ? `/api/b2b/pages/${encodeURIComponent(arg.id)}.json` : '/api/b2b/pages.json';
         const method = !!arg.id ? 'PUT' : 'POST';
         const res = await fetchJSON<{ page?: ContentPage }>(url, {method, body});
         return res?.page ?? null;

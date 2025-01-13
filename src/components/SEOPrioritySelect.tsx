@@ -1,11 +1,9 @@
 import React, {ChangeEventHandler} from 'react';
+import {FormSelect, FormSelectProps} from "react-bootstrap";
 
-const SEOPrioritySelect = ({value, onChange}: {
-    value: number | undefined | null;
-    onChange: ChangeEventHandler<HTMLSelectElement>
-}) => {
+const SEOPrioritySelect = ({value, onChange}: FormSelectProps) => {
     return (
-        <select className="form-select form-select-sm" value={value ?? 0} onChange={onChange} required={true}>
+        <FormSelect size="sm" value={value ?? 0} onChange={onChange} required={true}>
             <option value="">Select One</option>
             <option value={0.0}>0.0</option>
             <option value={0.1}>0.1</option>
@@ -18,7 +16,7 @@ const SEOPrioritySelect = ({value, onChange}: {
             <option value={0.8}>0.8</option>
             <option value={0.9}>0.9</option>
             <option value={1.0}>1.0</option>
-        </select>
+        </FormSelect>
     )
 };
 
