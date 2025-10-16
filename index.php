@@ -19,5 +19,5 @@ $ui = new WebUI2([
     "contentFile" => 'body.inc.php',
     "requiredRoles" => [Groups::ADMIN],
 ]);
-$ui->addManifestJSON('public/js/manifest.json')
+$ui->addViteManifest()
     ->render();
