@@ -1,8 +1,8 @@
-import {ContentPage, Keyword} from "b2b-types";
+import type {ContentPage, Keyword} from "b2b-types";
 import {createAsyncThunk, createReducer, createSelector} from "@reduxjs/toolkit";
 import {fetchKeywords} from "./api";
 import {loadPage, loadPages, removePage, savePage, selectCurrentPage} from "../pages";
-import {RootState} from "../../app/configureStore";
+import {type RootState} from "@/app/configureStore";
 
 export interface KeywordsState {
     list: Keyword[];
@@ -31,7 +31,7 @@ export const loadKeywords = createAsyncThunk<Keyword[]>(
         return await fetchKeywords();
     },
     {
-        condition: (arg, {getState}) => {
+        condition: (_, {getState}) => {
             const state = getState() as RootState;
             return !selectKeywordsLoading(state);
         }

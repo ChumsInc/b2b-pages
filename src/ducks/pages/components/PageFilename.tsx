@@ -1,10 +1,9 @@
-import React, {useId} from 'react';
+import {useId} from 'react';
 import FormGroup from "react-bootstrap/FormGroup";
-import {FormCheckProps, FormLabel} from "react-bootstrap";
+import {FormLabel} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
-import FormCheck from "react-bootstrap/FormCheck";
 import Row from "react-bootstrap/Row";
-import FormControl, {FormControlProps} from "react-bootstrap/FormControl";
+import FormControl, {type FormControlProps} from "react-bootstrap/FormControl";
 
 
 export default function PageFilename({value, onChange, ...rest}: FormControlProps) {

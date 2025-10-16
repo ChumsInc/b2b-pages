@@ -8,21 +8,16 @@
  * @copyright Copyright &copy; 2013, steve
  */
 
-require_once ("autoload.inc.php");
-require_once ('access.inc.php');
+use chums\ui\WebUI2;
+use chums\user\Groups;
 
-$bodyPath = "apps/b2b-pages";
-$title = "B2B Pages";
-$description = "";
+require_once("autoload.inc.php");
 
-$ui = new WebUI($bodyPath, $title, $description, true, 5);
-$ui->version = "2019-03-07";
-$ui->bodyClassName = 'container-fluid';
-$ui->AddCSS("public/css/styles.css");
-$ui->addManifest('public/js/manifest.json');
-/**
- * Changelog:
- */
-
-
-$ui->Send();
+$ui = new WebUI2([
+    'title' => 'B2B Pages Editor',
+    'bodyClassName' => 'container-fluid',
+    "contentFile" => 'body.inc.php',
+    "requiredRoles" => [Groups::ADMIN],
+]);
+$ui->addManifestJSON('public/js/manifest.json')
+    ->render();

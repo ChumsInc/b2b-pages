@@ -1,12 +1,14 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {useAppDispatch} from "./configureStore";
-import {loadPages} from "../ducks/pages";
-import {loadKeywords} from "../ducks/keywords";
+import {loadPages} from "@/ducks/pages";
+import {loadKeywords} from "@/ducks/keywords";
 import PageList from "../ducks/pages/PageList";
 import EditPage from "../ducks/pages/EditPage";
-import AlertList from "../ducks/alerts/AlertList";
+import AppAlertList from "../ducks/alerts/AppAlertList";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import AppContainer from "@/app/AppContainer.ts";
+
 
 const App = () => {
     const dispatch = useAppDispatch();
@@ -17,8 +19,8 @@ const App = () => {
     }, []);
 
     return (
-        <div>
-            <AlertList/>
+        <AppContainer>
+            <AppAlertList/>
             <Row className="row g-3">
                 <Col xs={12} md={6}>
                     <PageList/>
@@ -27,7 +29,7 @@ const App = () => {
                     <EditPage/>
                 </Col>
             </Row>
-        </div>
+        </AppContainer>
     )
 }
 

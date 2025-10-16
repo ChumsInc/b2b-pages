@@ -1,6 +1,6 @@
-import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import {type ChangeEvent, type FormEvent, useEffect, useState} from 'react';
 import ModalEditor from "../../components/ModalEditor";
-import {useAppDispatch, useAppSelector} from "../../app/configureStore";
+import {useAppDispatch, useAppSelector} from "@/app/configureStore";
 import {
     clearCurrentPage,
     removePage,
@@ -9,7 +9,7 @@ import {
     selectCurrentPage,
     selectCurrentSaving
 } from "./index";
-import {ContentPage, Editable} from "b2b-types";
+import type {ContentPage, Editable} from "b2b-types";
 import {emptyPage} from "./api";
 import Alert from 'react-bootstrap/Alert'
 import {ProgressBar} from "react-bootstrap";
@@ -64,10 +64,6 @@ const EditPage = () => {
         setContent({...content, [field]: ev.target.value, changed: true});
     }
 
-    const textareaChangeHandler = (field: ModalEditorField) => (ev: ChangeEvent<HTMLTextAreaElement>) => {
-        setContent({...content, [field]: ev.target.value, changed: true});
-    }
-
     const onCloseEditor = (value: string) => {
         setContent({...content, [modalEditorField]: value, changed: true});
         setShowModalEditor(false);
@@ -118,7 +114,9 @@ const EditPage = () => {
                 <PageFormControl label="Filename" value={content.filename ?? ''}
                                  onChange={inputChangeHandler('filename')}/>
                 <PageTextArea label="Page Content" value={content.content ?? ''}
-                              onChange={inputChangeHandler('content')} canZoom onZoom={() => onShowEditor('content')}/>
+                              disabled={!!content.filename}
+                              onChange={inputChangeHandler('content')}
+                              canZoom onZoom={() => onShowEditor('content')}/>
                 <PageFormControl label="Lifestyle Image" value={content.lifestyle ?? ''}
                                  onChange={inputChangeHandler('lifestyle')}/>
                 <PageFormControl label="Page CSS File" value={content.css ?? ''} onChange={inputChangeHandler('css')}/>

@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {SortableTable, SortableTableField, SortProps, TablePagination} from "chums-components";
-import {ContentPage} from "b2b-types";
-import {useAppDispatch, useAppSelector} from "../../app/configureStore";
+import {useEffect, useState} from 'react';
+import {SortableTable, type SortableTableField, type SortProps, TablePagination} from "@chumsinc/sortable-tables";
+import type {ContentPage} from "b2b-types";
+import {useAppDispatch, useAppSelector} from "@/app/configureStore";
 import {loadPage, selectFilteredList, selectListLoading, selectSort, setSort} from "./index";
 import classNames from "classnames";
 import ProgressBar from "react-bootstrap/ProgressBar";
@@ -30,7 +30,13 @@ const PageList = () => {
 
     useEffect(() => {
         setPage(0)
-    }, [list, rowsPerPage]);
+    }, [sort, rowsPerPage]);
+
+    useEffect(() => {
+        if (list.length < page * rowsPerPage) {
+            setPage(0)
+        }
+    }, [list.length, page, rowsPerPage]);
 
 
     const sortChangeHandler = (sort: SortProps<ContentPage>) => {
@@ -43,12 +49,13 @@ const PageList = () => {
         <div>
             <PageFilters/>
             {loading && <ProgressBar animated striped className="my-1" variant="primary" now={100}/>}
-            <SortableTable currentSort={sort} onChangeSort={sortChangeHandler} fields={fields} data={pagedData}
+            <SortableTable size="sm" currentSort={sort} onChangeSort={sortChangeHandler} fields={fields} data={pagedData}
                            keyField="id"
                            rowClassName={(row) => classNames({'table-warning': !row.status})}
                            onSelectRow={selectRowHandler}/>
-            <TablePagination page={page} onChangePage={setPage} rowsPerPage={rowsPerPage}
-                             onChangeRowsPerPage={setRowsPerPage} count={list.length}/>
+            <TablePagination page={page} onChangePage={setPage} rowsPerPage={rowsPerPage} size="sm"
+                             rowsPerPageProps={{onChange: setRowsPerPage}}
+                             count={list.length}/>
         </div>
     );
 

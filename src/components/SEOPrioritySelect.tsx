@@ -1,5 +1,4 @@
-import React, {ChangeEventHandler} from 'react';
-import {FormSelect, FormSelectProps} from "react-bootstrap";
+import FormSelect, {type FormSelectProps} from "react-bootstrap/FormSelect";
 
 const SEOPrioritySelect = ({value, onChange}: FormSelectProps) => {
     return (

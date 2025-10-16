@@ -1,6 +1,5 @@
-import React from 'react';
-import {useAppSelector} from "../app/configureStore";
-import {selectKeywordsList} from "../ducks/keywords";
+import {useAppSelector} from "@/app/configureStore";
+import {selectKeywordsList} from "@/ducks/keywords";
 import Alert from "react-bootstrap/Alert";
 
 const AlertExistingKeyword = ({keyword, pageId}: { keyword: string; pageId: number }) => {

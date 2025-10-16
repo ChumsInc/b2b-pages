@@ -1,21 +1,19 @@
-import React, {useId} from 'react';
-import FormGroup from "react-bootstrap/FormGroup";
-import {FormCheckProps, FormLabel} from "react-bootstrap";
+import {useId} from 'react';
 import Col from "react-bootstrap/Col";
-import FormCheck from "react-bootstrap/FormCheck";
-import Row from "react-bootstrap/Row";
-import FormControl, {FormControlProps} from "react-bootstrap/FormControl";
+import FormControl, {type FormControlProps} from "react-bootstrap/FormControl";
 import PageFormGroup from "./PageFormGroup";
 
 export interface PageFormControlProps extends FormControlProps {
     label: string;
 }
+
 export default function PageFormControl({label, value, onChange, required, ...rest}: PageFormControlProps) {
     const id = rest.id ?? useId();
     return (
         <PageFormGroup gap={3} id={id} label={label} required={required}>
             <Col sm>
-                <FormControl size="sm" type="text" id={id} value={value} onChange={onChange} required={required} {...rest} />
+                <FormControl size="sm" type="text" id={id} value={value} onChange={onChange}
+                             required={required} {...rest} />
             </Col>
         </PageFormGroup>
     )

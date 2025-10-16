@@ -1,17 +1,18 @@
-import React, {ChangeEvent} from 'react';
+import {type ChangeEvent, useId} from 'react';
 import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
 import FormCheck from "react-bootstrap/FormCheck";
 import {loadPages, selectSearch, selectShowInactive, setSearch, toggleShowInactive} from "../index";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
-import {useAppDispatch, useAppSelector} from "../../../app/configureStore";
+import {useAppDispatch, useAppSelector} from "@/app/configureStore";
 import {loadKeywords} from "../../keywords";
 
 export default function PageFilters() {
     const dispatch = useAppDispatch();
     const search = useAppSelector(selectSearch);
     const showInactive = useAppSelector(selectShowInactive);
+    const showInactiveId = useId()
 
     const reloadHandler = () => {
         dispatch(loadPages());
@@ -29,7 +30,7 @@ export default function PageFilters() {
                 <FormControl size="sm" type="search" value={search} onChange={searchChangeHandler}/>
             </Col>
             <Col xs="auto">
-                <FormCheck type="checkbox" label="Show Inactive"
+                <FormCheck type="checkbox" label="Show Inactive" id={showInactiveId}
                            checked={showInactive}
                            onChange={(ev) => dispatch(toggleShowInactive(ev.target.checked))}/>
             </Col>

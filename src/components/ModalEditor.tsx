@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
-import Editor, {DiffEditor, useMonaco} from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import Button from "react-bootstrap/Button";
 
 interface ModalEditorProps {
@@ -10,7 +10,7 @@ interface ModalEditorProps {
     onCancel: () => void,
 }
 
-const ModalEditor: React.FC<ModalEditorProps> = ({title, content, onClose, onCancel}) => {
+export default function ModalEditor({title, content, onClose, onCancel}: ModalEditorProps) {
     const [html, setHTML] = useState(content || '');
 
     useEffect(() => {
@@ -37,5 +37,3 @@ const ModalEditor: React.FC<ModalEditorProps> = ({title, content, onClose, onCan
         </Modal>
     )
 };
-
-export default ModalEditor;

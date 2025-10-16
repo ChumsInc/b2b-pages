@@ -1,10 +1,10 @@
-import React, {useId} from 'react';
-import {FormSelectProps, InputGroup} from "react-bootstrap";
+import {useId} from 'react';
+import {type FormSelectProps, InputGroup} from "react-bootstrap";
 import PageFormGroup from "./PageFormGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import SEOChangeSelect from "../../../components/SEOChangeSelect";
-import SEOPrioritySelect from "../../../components/SEOPrioritySelect";
+import SEOChangeSelect from "@/components/SEOChangeSelect";
+import SEOPrioritySelect from "@/components/SEOPrioritySelect";
 
 export interface PageSEOOptionsProps {
     label: string;

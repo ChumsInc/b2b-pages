@@ -1,8 +1,8 @@
-import React, {useId} from 'react';
+import {useId} from 'react';
 import FormGroup from "react-bootstrap/FormGroup";
-import {FormCheckProps, FormLabel} from "react-bootstrap";
+import FormLabel from "react-bootstrap/FormLabel";
 import Col from "react-bootstrap/Col";
-import FormCheck from "react-bootstrap/FormCheck";
+import FormCheck, {type FormCheckProps} from "react-bootstrap/FormCheck";
 import Row from "react-bootstrap/Row";
 
 export interface KeywordStatusProps {
@@ -18,7 +18,7 @@ export default function PageStatus({slots}: KeywordStatusProps) {
 
     return (
         <FormGroup as={Row} gap={3}>
-            <FormLabel column="sm" sm={4}>Status</FormLabel>
+            <FormLabel column={true} sm={4} lg={3}>Status</FormLabel>
             <Col sm>
                 <FormCheck id={statusId} {...slots.status} label="Enabled" inline className="me-5"/>
                 <FormCheck id={requiresLoginId} {...slots.requiresLogin} label="Requires Login" inline/>
