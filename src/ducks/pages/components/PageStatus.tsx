@@ -13,14 +13,18 @@ export interface KeywordStatusProps {
 }
 
 export default function PageStatus({slots}: KeywordStatusProps) {
-    const statusId = slots.status.id ?? useId();
-    const requiresLoginId = slots.requiresLogin.id ?? useId();
+    const _statusId = useId();
+    const _requiresLoginId = useId();
+    const statusId = slots.status.id ?? _statusId;
+    const requiresLoginId = slots.requiresLogin.id ?? _requiresLoginId;
 
     return (
-        <FormGroup as={Row} gap={3}>
+        <FormGroup as={Row} gap={3} className="align-items-center">
             <FormLabel column={true} sm={4} lg={3}>Status</FormLabel>
-            <Col sm>
+            <Col xs="auto">
                 <FormCheck id={statusId} {...slots.status} label="Enabled" inline className="me-5"/>
+            </Col>
+            <Col xs="auto">
                 <FormCheck id={requiresLoginId} {...slots.requiresLogin} label="Requires Login" inline/>
             </Col>
         </FormGroup>

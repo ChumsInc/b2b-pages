@@ -1,4 +1,4 @@
-import type {ContentPage} from "b2b-types";
+import type {ContentPage} from "chums-types/b2b";
 import {createAsyncThunk, createEntityAdapter, createSelector, createSlice, type PayloadAction} from "@reduxjs/toolkit";
 import {deletePage, fetchPage, fetchPages, postPage} from "./api";
 import {type RootState} from "@/app/configureStore";

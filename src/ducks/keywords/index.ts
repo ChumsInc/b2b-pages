@@ -1,105 +1,65 @@
-import type {ContentPage, Keyword} from "b2b-types";
-import {createAsyncThunk, createReducer, createSelector} from "@reduxjs/toolkit";
-import {fetchKeywords} from "./api";
-import {loadPage, loadPages, removePage, savePage, selectCurrentPage} from "../pages";
-import {type RootState} from "@/app/configureStore";
+import type {Keyword} from "chums-types/b2b";
+import {createEntityAdapter, createSlice, isAnyOf} from "@reduxjs/toolkit";
+import {loadPage, removePage, savePage} from "../pages";
+import {loadKeywords} from "@/ducks/keywords/actions.ts";
+import {pageToKeyword} from "@/ducks/keywords/utils.ts";
+import {dismissAlert} from "@chumsinc/alert-list";
 
 export interface KeywordsState {
-    list: Keyword[];
-    loading: boolean;
+    status: 'idle' | 'loading' | 'rejected'
 }
 
-export const initialState:KeywordsState = {
-    list: [],
-    loading: false,
+export const initialState: KeywordsState = {
+    status: 'idle'
 }
 
-export const selectKeywordsList = (state:RootState) => state.keywords.list;
-export const selectKeywordsLoading = (state:RootState) => state.keywords.loading;
+const adapter = createEntityAdapter<Keyword, string>({
+    selectId: (arg) => arg.keyword,
+    sortComparer: (a, b) => a.keyword.localeCompare(b.keyword),
+})
+const selectors = adapter.getSelectors();
 
-export const selectCurrentKeyword = createSelector(
-    [selectKeywordsList, selectCurrentPage],
-    (list, page) => {
-        const [keyword] = list.filter(kw => kw.keyword === page?.keyword);
-        return keyword ?? null;
-    }
-)
+const keywordsSlice = createSlice({
+    name: 'keywords',
+    initialState: adapter.getInitialState(initialState),
+    reducers: {},
+    extraReducers: builder => {
+        builder
+            .addCase(removePage.fulfilled, (state, action) => {
+                if (action.meta.arg.keyword) {
+                    adapter.removeOne(state, action.meta.arg.keyword);
+                }
+            })
+            .addCase(dismissAlert, (state, action) => {
+                if (action.payload.context?.startsWith('keywords/')) {
+                    state.status = 'idle';
+                }
+            })
+            .addAsyncThunk(loadKeywords, {
+                pending: (state) => {
+                    state.status = 'loading';
+                },
+                fulfilled: (state, action) => {
+                    state.status = 'idle';
+                    adapter.setAll(state, action.payload);
+                },
+                rejected: (state) => {
+                    state.status = 'rejected';
+                }
+            })
+            .addMatcher(isAnyOf(savePage.fulfilled, loadPage.fulfilled), (state, action) => {
+                if (action.payload) {
+                    adapter.setOne(state, pageToKeyword(action.payload))
+                }
+            })
 
-export const loadKeywords = createAsyncThunk<Keyword[]>(
-    'keywords/load',
-    async () => {
-        return await fetchKeywords();
     },
-    {
-        condition: (_, {getState}) => {
-            const state = getState() as RootState;
-            return !selectKeywordsLoading(state);
-        }
+    selectors: {
+        selectAllKeywords: (state) => selectors.selectAll(state),
+        selectKeywordsStatus: (state) => state.status,
     }
-)
-
-export const keywordsListSorter = (a:Keyword, b:Keyword) => {
-    return a.keyword.toLowerCase() > b.keyword.toLowerCase() ? 1 : -1;
-}
-
-export const emptyPageKeyword:Keyword = {
-    pagetype: 'page',
-    id: 0,
-    keyword: '',
-    title: '',
-    parent: '',
-    redirect_to_parent: 0,
-    status: false,
-}
-
-const pageToKeyword = (page:ContentPage):Keyword => {
-    return {...emptyPageKeyword, id: page.id, title: page.title ?? '', keyword: page.keyword ?? '', status: page.status};
-}
-
-const keywordsReducer = createReducer(initialState, builder => {
-    builder
-        .addCase(loadKeywords.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(loadKeywords.fulfilled, (state, action) => {
-            state.loading = false;
-            state.list = action.payload.sort(keywordsListSorter);
-        })
-        .addCase(loadKeywords.rejected, (state) => {
-            state.loading = false;
-        })
-        .addCase(savePage.fulfilled, (state, action) => {
-            const list = state.list.filter(kw => kw.id !== action.meta.arg.id);
-            if (action.payload && action.payload.keyword) {
-                state.list = [
-                    ...list,
-                    pageToKeyword(action.payload)
-                ].sort(keywordsListSorter);
-            }
-        })
-        .addCase(loadPage.fulfilled, (state, action) => {
-            if (action.payload && action.payload.keyword) {
-                const list = state.list.filter(kw => kw.keyword !== action.payload?.keyword);
-                state.list = [
-                    ...list,
-                    pageToKeyword(action.payload)
-                ].sort(keywordsListSorter);
-            }
-        })
-        .addCase(loadPages.fulfilled, (state, action) => {
-            const list = state.list.filter(kw => kw.pagetype !== 'page');
-            state.list = [
-                ...list,
-                ...action.payload.map(page => pageToKeyword(page)),
-            ].sort(keywordsListSorter);
-        })
-        .addCase(removePage.fulfilled, (state, action) => {
-            const list = state.list.filter(kw => kw.pagetype !== 'page');
-            state.list = [
-                ...list,
-                ...action.payload.map(page => pageToKeyword(page)),
-            ].sort(keywordsListSorter);
-        })
 });
 
-export default keywordsReducer;
+export default keywordsSlice;
+export const {selectAllKeywords, selectKeywordsStatus} = keywordsSlice.selectors
+

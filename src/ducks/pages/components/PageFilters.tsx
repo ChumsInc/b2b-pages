@@ -6,7 +6,7 @@ import {loadPages, selectSearch, selectShowInactive, setSearch, toggleShowInacti
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import {useAppDispatch, useAppSelector} from "@/app/configureStore";
-import {loadKeywords} from "../../keywords";
+import {loadKeywords} from "../../keywords/actions.ts";
 
 export default function PageFilters() {
     const dispatch = useAppDispatch();

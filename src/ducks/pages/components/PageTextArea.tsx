@@ -32,20 +32,21 @@ export default function PageTextArea({
                                          required,
                                          ...rest
                                      }: PageTextAreaProps) {
-    const id = rest.id ?? useId();
+    const _id = useId();
+    const id = rest.id ?? _id;
     return (
-        <PageFormGroup id={id} label={label} required={required}>
-            <Col>
+        <PageFormGroup id={id} label={(
+            <>
+                <label className="me-1" htmlFor={id}>{label}</label>
+                <Button variant="link" disabled={!canZoom} onClick={onZoom}>
+                    <span className="bi-pencil-square" title="Open in editor" />
+                </Button>
+            </>
+        )} required={required}>
+            <Col sm={8} lg={9}>
                 <FormControl size="sm" as={TextArea} id={id} value={value} onChange={onChange}
                              className="font-monospace"
                              required={required}  {...textAreaProps ?? {minRows: 3, maxRows: 10}} {...rest} />
-                {canZoom && (
-                    <div className="d-grid gap-2 mt-1">
-                        <Button type="button" size="sm" variant="outline-secondary" onClick={onZoom}>
-                            <div>Open Editor<span className="bi-pencil-square ms-1"/></div>
-                        </Button>
-                    </div>
-                )}
             </Col>
         </PageFormGroup>
     )

@@ -1,4 +1,4 @@
-import type {ContentPage} from "b2b-types";
+import type {ContentPage} from "chums-types/b2b";
 import {fetchJSON} from "@chumsinc/ui-utils";
 
 export async function fetchPages():Promise<ContentPage[]> {
@@ -19,8 +19,8 @@ export async function fetchPages():Promise<ContentPage[]> {
 export async function postPage(arg:ContentPage):Promise<ContentPage|null> {
     try {
         const body = JSON.stringify(arg);
-        const url = !!arg.id ? `/api/b2b/pages/${encodeURIComponent(arg.id)}.json` : '/api/b2b/pages.json';
-        const method = !!arg.id ? 'PUT' : 'POST';
+        const url = arg.id ? `/api/b2b/pages/${encodeURIComponent(arg.id)}.json` : '/api/b2b/pages.json';
+        const method = arg.id ? 'PUT' : 'POST';
         const res = await fetchJSON<{ page?: ContentPage }>(url, {method, body});
         return res?.page ?? null;
     } catch(err:unknown) {

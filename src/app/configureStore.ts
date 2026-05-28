@@ -1,13 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {combineReducers} from "redux";
 import pagesSlice from "@/ducks/pages";
-import keywordsReducer from "@/ducks/keywords";
+import keywordsSlice from "@/ducks/keywords";
 import {alertsSlice} from '@chumsinc/alert-list'
 import {type TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 const rootReducer = combineReducers({
     [alertsSlice.reducerPath]: alertsSlice.reducer,
-    keywords: keywordsReducer,
+    [keywordsSlice.reducerPath]: keywordsSlice.reducer,
     [pagesSlice.reducerPath]: pagesSlice.reducer,
 })
 

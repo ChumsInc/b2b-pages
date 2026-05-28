@@ -7,7 +7,8 @@ import FormControl, {type FormControlProps} from "react-bootstrap/FormControl";
 
 
 export default function PageTitle({value, onChange, ...rest}: FormControlProps) {
-    const id = rest.id ?? useId();
+    const _id = useId();
+    const id = rest.id ?? _id;
     return (
         <FormGroup as={Row} gap={3} id={id}>
             <FormLabel column="sm" sm={4} htmlFor={id}>Title *</FormLabel>

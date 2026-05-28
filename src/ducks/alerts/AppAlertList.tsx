@@ -1,12 +1,16 @@
 import {useSelector} from "react-redux";
 import {AlertList, dismissAlert, selectAllAlerts, type StyledErrorAlert} from "@chumsinc/alert-list";
-import {useAppDispatch} from "../../app/configureStore";
+import {useAppDispatch} from "@/app/configureStore";
 
 const AppAlertList = () => {
     const dispatch = useAppDispatch();
     const alerts = useSelector(selectAllAlerts);
 
     const dismissHandler = (alert: StyledErrorAlert) => dispatch(dismissAlert(alert));
+
+    if (!alerts.length) {
+        return null;
+    }
 
     return (
         <AlertList list={alerts} onDismiss={dismissHandler}/>

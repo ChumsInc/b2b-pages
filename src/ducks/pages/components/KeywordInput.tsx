@@ -10,14 +10,16 @@ export interface KeywordInputProps extends FormControlProps {
     value: string;
 }
 
-export default function KeywordInput({pageId, value, onChange, ...props}: KeywordInputProps) {
-    const id = props.id ?? useId();
+export default function KeywordInput({pageId, value, onChange, id: propsId, ...rest}: KeywordInputProps) {
+    const _id = useId();
+    const id = propsId ?? _id;
+
     return (
         <PageFormGroup id={id} required label="Keyword">
             <Col sm>
                 <InputGroup size="sm">
                     <InputGroup.Text>ID: <span className="ms-1">{pageId || 'NEW'}</span></InputGroup.Text>
-                    <FormControl type="text" size="sm" value={value} onChange={onChange} required={true}/>
+                    <FormControl type="text" size="sm" name="keyword" value={value} onChange={onChange} required={true} id={id} {...rest}/>
                 </InputGroup>
                 <KeywordExistsAlert keyword={value ?? ''} pageId={pageId}/>
             </Col>

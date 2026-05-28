@@ -1,20 +1,13 @@
 import {useEffect, useState} from 'react';
-import {SortableTable, type SortableTableField, type SortProps, TablePagination} from "@chumsinc/sortable-tables";
-import type {ContentPage} from "b2b-types";
+import {SortableTable, type SortProps, TablePagination} from "@chumsinc/sortable-tables";
+import type {ContentPage} from "chums-types/b2b";
 import {useAppDispatch, useAppSelector} from "@/app/configureStore";
 import {loadPage, selectFilteredList, selectListLoading, selectSort, setSort} from "./index";
 import classNames from "classnames";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import PageFilters from "./components/PageFilters";
+import {pageListFields} from "@/ducks/pages/pageListFields.tsx";
 
-const fields: SortableTableField<ContentPage>[] = [
-    {field: 'id', title: 'ID', sortable: true, align: 'end' },
-    {field: 'keyword', title: 'Keyword', sortable: true},
-    {field: 'title', title: 'Name', sortable: true},
-    {field: 'filename', title: 'Filename', sortable: true},
-    {field: 'changefreq', title: 'SEO Change Freq.', sortable: true},
-    {field: 'priority', title: 'SEO Priority', sortable: true, align: 'end'},
-];
 
 const PageList = () => {
     const dispatch = useAppDispatch();
@@ -22,7 +15,7 @@ const PageList = () => {
     const loading = useAppSelector(selectListLoading);
     const sort = useAppSelector(selectSort);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(25);
 
     const selectRowHandler = (row: ContentPage) => {
         dispatch(loadPage(row.id));
@@ -46,10 +39,11 @@ const PageList = () => {
     const pagedData = list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
-        <div>
+        <div className="container-fluid">
             <PageFilters/>
             {loading && <ProgressBar animated striped className="my-1" variant="primary" now={100}/>}
-            <SortableTable size="sm" currentSort={sort} onChangeSort={sortChangeHandler} fields={fields} data={pagedData}
+            <SortableTable size="xs" currentSort={sort} onChangeSort={sortChangeHandler} fields={pageListFields}
+                           data={pagedData}
                            keyField="id"
                            rowClassName={(row) => classNames({'table-warning': !row.status})}
                            onSelectRow={selectRowHandler}/>

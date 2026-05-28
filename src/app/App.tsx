@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useAppDispatch} from "./configureStore";
 import {loadPages} from "@/ducks/pages";
-import {loadKeywords} from "@/ducks/keywords";
+import {loadKeywords} from "@/ducks/keywords/actions.ts";
 import PageList from "../ducks/pages/PageList";
 import EditPage from "../ducks/pages/EditPage";
 import AppAlertList from "../ducks/alerts/AppAlertList";
@@ -15,13 +15,13 @@ const App = () => {
 
     useEffect(() => {
         dispatch(loadPages());
-        dispatch(loadKeywords())
-    }, []);
+        dispatch(loadKeywords());
+    }, [dispatch]);
 
     return (
-        <AppContainer>
+        <AppContainer className="overflow-hidden">
             <AppAlertList/>
-            <Row className="row g-3">
+            <Row className="g-5">
                 <Col xs={12} md={6}>
                     <PageList/>
                 </Col>

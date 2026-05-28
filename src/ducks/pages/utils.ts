@@ -1,5 +1,5 @@
 import type {SortProps} from "chums-types";
-import type {ContentPage} from "b2b-types";
+import type {ContentPage} from "chums-types/b2b";
 
 export const pageListSorter = (sort: SortProps<ContentPage>) => (a: ContentPage, b: ContentPage) => {
     const sortMod = sort.ascending ? 1 : -1;

@@ -1,8 +1,8 @@
 import FormSelect, {type FormSelectProps} from "react-bootstrap/FormSelect";
 
-const SEOPrioritySelect = ({value, onChange}: FormSelectProps) => {
+const SEOPrioritySelect = ({value, onChange, ...rest}: FormSelectProps) => {
     return (
-        <FormSelect size="sm" value={value ?? 0} onChange={onChange} required={true}>
+        <FormSelect size="sm" value={value ?? 0} onChange={onChange} required={true} {...rest}>
             <option value="">Select One</option>
             <option value={0.0}>0.0</option>
             <option value={0.1}>0.1</option>
