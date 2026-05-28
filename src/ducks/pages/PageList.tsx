@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {startTransition, useEffect, useState} from 'react';
 import {SortableTable, type SortProps, TablePagination} from "@chumsinc/sortable-tables";
 import type {ContentPage} from "chums-types/b2b";
 import {useAppDispatch, useAppSelector} from "@/app/configureStore";
@@ -22,12 +22,16 @@ const PageList = () => {
     }
 
     useEffect(() => {
-        setPage(0)
+        startTransition(() => {
+            setPage(0)
+        })
     }, [sort, rowsPerPage]);
 
     useEffect(() => {
         if (list.length < page * rowsPerPage) {
-            setPage(0)
+            startTransition(() => {
+                setPage(0)
+            })
         }
     }, [list.length, page, rowsPerPage]);
 
